@@ -1,48 +1,48 @@
-CREATE TABLE [User] (
-    [Id] INT PRIMARY KEY IDENTITY(1,1),
-    [Name] VARCHAR(255) NOT NULL,
-    [Email] VARCHAR(255) UNIQUE NOT NULL,
-    [Password] VARCHAR(255) NOT NULL,
-    [CreatedAt] DATETIME DEFAULT (GETDATE()),
-    [UpdatedAt] DATETIME DEFAULT (GETDATE())
+CREATE TABLE `User` (
+    `Id` INT PRIMARY KEY AUTO_INCREMENT,
+    `Name` VARCHAR(255) NOT NULL,
+    `Email` VARCHAR(255) UNIQUE NOT NULL,
+    `Password` VARCHAR(255) NOT NULL,
+    `CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE [Category] (
-    [Id] INT PRIMARY KEY IDENTITY(1,1),
-    [Name] VARCHAR(255) NOT NULL,
-    [Description] TEXT,
-    [CreatedAt] DATETIME DEFAULT (GETDATE()),
-    [UpdatedAt] DATETIME DEFAULT (GETDATE())
+CREATE TABLE `Category` (
+    `Id` INT PRIMARY KEY AUTO_INCREMENT,
+    `Name` VARCHAR(255) NOT NULL,
+    `Description` TEXT,
+    `CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE [Product] (
-    [Id] INT PRIMARY KEY IDENTITY(1,1),
-    [Name] VARCHAR(255) NOT NULL,
-    [Description] TEXT,
-    [Price] DECIMAL(10,2) NOT NULL,
-    [CategoryId] INT,
-    [CreatedAt] DATETIME DEFAULT (GETDATE()),
-    [UpdatedAt] DATETIME DEFAULT (GETDATE()),
-    FOREIGN KEY ([CategoryId]) REFERENCES [Category]([Id])
+CREATE TABLE `Product` (
+    `Id` INT PRIMARY KEY AUTO_INCREMENT,
+    `Name` VARCHAR(255) NOT NULL,
+    `Description` TEXT,
+    `Price` DECIMAL(10,2) NOT NULL,
+    `CategoryId` INT,
+    `CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `UpdatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`CategoryId`) REFERENCES `Category`(`Id`)
 );
 
-CREATE TABLE [Order] (
-    [Id] INT PRIMARY KEY IDENTITY(1,1),
-    [UserId] INT NOT NULL,
-    [ProductId] INT NOT NULL,
-    [Quantity] INT NOT NULL,
-    [OrderDate] DATETIME DEFAULT (GETDATE()),
-    FOREIGN KEY ([UserId]) REFERENCES [User]([Id]),
-    FOREIGN KEY ([ProductId]) REFERENCES [Product]([Id])
+CREATE TABLE `Order` (
+    `Id` INT PRIMARY KEY AUTO_INCREMENT,
+    `UserId` INT NOT NULL,
+    `ProductId` INT NOT NULL,
+    `Quantity` INT NOT NULL,
+    `OrderDate` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`),
+    FOREIGN KEY (`ProductId`) REFERENCES `Product`(`Id`)
 );
 
-CREATE TABLE [Review] (
-    [Id] INT PRIMARY KEY IDENTITY(1,1),
-    [UserId] INT NOT NULL,
-    [ProductId] INT NOT NULL,
-    [Rating] INT CHECK ([Rating] >= 1 AND [Rating] <= 5),
-    [Comment] TEXT,
-    [CreatedAt] DATETIME DEFAULT (GETDATE()),
-    FOREIGN KEY ([UserId]) REFERENCES [User]([Id]),
-    FOREIGN KEY ([ProductId]) REFERENCES [Product]([Id])
+CREATE TABLE `Review` (
+    `Id` INT PRIMARY KEY AUTO_INCREMENT,
+    `UserId` INT NOT NULL,
+    `ProductId` INT NOT NULL,
+    `Rating` INT CHECK (`Rating` >= 1 AND `Rating` <= 5),
+    `Comment` TEXT,
+    `CreatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`UserId`) REFERENCES `User`(`Id`),
+    FOREIGN KEY (`ProductId`) REFERENCES `Product`(`Id`)
 );
