@@ -1,29 +1,48 @@
--- Create User table
-CREATE TABLE [dbo].[User](
-    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    [Username] NVARCHAR(50) NOT NULL,
-    [Email] NVARCHAR(50) NOT NULL,
-    [PasswordHash] NVARCHAR(128) NOT NULL,
-    [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
-    [UpdatedAt] DATETIME NULL
+CREATE TABLE [User] (
+    [Id] INT PRIMARY KEY IDENTITY(1,1),
+    [Name] VARCHAR(255) NOT NULL,
+    [Email] VARCHAR(255) UNIQUE NOT NULL,
+    [Password] VARCHAR(255) NOT NULL,
+    [CreatedAt] DATETIME DEFAULT (GETDATE()),
+    [UpdatedAt] DATETIME DEFAULT (GETDATE())
 );
 
--- Create Post table
-CREATE TABLE [dbo].[Post](
-    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    [Title] NVARCHAR(100) NOT NULL,
-    [Content] NVARCHAR(MAX) NOT NULL,
-    [UserId] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[User]([Id]),
-    [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
-    [UpdatedAt] DATETIME NULL
+CREATE TABLE [Category] (
+    [Id] INT PRIMARY KEY IDENTITY(1,1),
+    [Name] VARCHAR(255) NOT NULL,
+    [Description] TEXT,
+    [CreatedAt] DATETIME DEFAULT (GETDATE()),
+    [UpdatedAt] DATETIME DEFAULT (GETDATE())
 );
 
--- Create Comment table
-CREATE TABLE [dbo].[Comment](
-    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    [Content] NVARCHAR(500) NOT NULL,
-    [PostId] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Post]([Id]),
-    [UserId] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[User]([Id]),
-    [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
-    [UpdatedAt] DATETIME NULL
+CREATE TABLE [Product] (
+    [Id] INT PRIMARY KEY IDENTITY(1,1),
+    [Name] VARCHAR(255) NOT NULL,
+    [Description] TEXT,
+    [Price] DECIMAL(10,2) NOT NULL,
+    [CategoryId] INT,
+    [CreatedAt] DATETIME DEFAULT (GETDATE()),
+    [UpdatedAt] DATETIME DEFAULT (GETDATE()),
+    FOREIGN KEY ([CategoryId]) REFERENCES [Category]([Id])
+);
+
+CREATE TABLE [Order] (
+    [Id] INT PRIMARY KEY IDENTITY(1,1),
+    [UserId] INT NOT NULL,
+    [ProductId] INT NOT NULL,
+    [Quantity] INT NOT NULL,
+    [OrderDate] DATETIME DEFAULT (GETDATE()),
+    FOREIGN KEY ([UserId]) REFERENCES [User]([Id]),
+    FOREIGN KEY ([ProductId]) REFERENCES [Product]([Id])
+);
+
+CREATE TABLE [Review] (
+    [Id] INT PRIMARY KEY IDENTITY(1,1),
+    [UserId] INT NOT NULL,
+    [ProductId] INT NOT NULL,
+    [Rating] INT CHECK ([Rating] >= 1 AND [Rating] <= 5),
+    [Comment] TEXT,
+    [CreatedAt] DATETIME DEFAULT (GETDATE()),
+    FOREIGN KEY ([UserId]) REFERENCES [User]([Id]),
+    FOREIGN KEY ([ProductId]) REFERENCES [Product]([Id])
 );
