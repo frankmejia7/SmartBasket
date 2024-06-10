@@ -1,0 +1,29 @@
+-- Create User table
+CREATE TABLE [dbo].[User](
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Username] NVARCHAR(50) NOT NULL,
+    [Email] NVARCHAR(50) NOT NULL,
+    [PasswordHash] NVARCHAR(128) NOT NULL,
+    [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
+    [UpdatedAt] DATETIME NULL
+);
+
+-- Create Post table
+CREATE TABLE [dbo].[Post](
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Title] NVARCHAR(100) NOT NULL,
+    [Content] NVARCHAR(MAX) NOT NULL,
+    [UserId] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[User]([Id]),
+    [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
+    [UpdatedAt] DATETIME NULL
+);
+
+-- Create Comment table
+CREATE TABLE [dbo].[Comment](
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Content] NVARCHAR(500) NOT NULL,
+    [PostId] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Post]([Id]),
+    [UserId] INT NOT NULL FOREIGN KEY REFERENCES [dbo].[User]([Id]),
+    [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE(),
+    [UpdatedAt] DATETIME NULL
+);
